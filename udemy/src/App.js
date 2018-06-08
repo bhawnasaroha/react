@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import Person from './Person/Person';
-
 import './App.css';
 
 class App extends Component {
   state = {
     persons: [
-      { name: 'Shane', percent: 94, children: 'I do conspiracy theories.' },
-      { name: 'Ryland', percent: 40 },
-      { name: 'Garrett', percent: 100, children: 'I like Harry Potter.' },
+      { id: 'fjfj3', name: 'Shane', percent: 94, children: 'I do conspiracy theories.' },
+      { id: 'kjoj5', name: 'Ryland', percent: 40 },
+      { id: 'dfrw9', name: 'Garrett', percent: 100, children: 'I like Harry Potter.' },
     ],
     showPersons: false,
   };
@@ -25,14 +24,21 @@ class App extends Component {
     });
   };
 
-  nameChangedHandler = (event) => {
-    this.setState({
-      persons: [
-        { name: 'Shane', percent: 94, children: 'I do conspiracy theories.' },
-        { name: event.target.value, percent: 40 },
-        { name: 'Garrett', percent: 100, children: 'I like Harry Potter.' },
-      ]
-    });
+  nameChangedHandler = (event, id) => {
+    const personIndex = this.state.persons.findIndex(p => p.id === id);
+
+    const person = {
+      ...this.state.persons[personIndex]
+    };
+
+    // const person = Object.assign({}, this.state.persons[personIndex]);
+
+    person.name = event.target.value;
+
+    const persons = [...this.state.persons];
+    persons[personIndex] = person;
+
+    this.setState({ persons: persons });
   }
 
   togglePersonsHandler = () => {
@@ -40,44 +46,56 @@ class App extends Component {
     this.setState({ showPersons: !doesShow });
   }
 
+  deletePersonHandler = (personIndex) => {
+    const persons = [...this.state.persons]
+    persons.splice(personIndex, 1);
+    this.setState({persons: persons});
+  }
+
   render() {
     const style = {
-      backgroundColor: '#000',
-      color: '#fff',
+      backgroundColor: '#40d6a3',
+      color: '#000',
       padding: '12px',
-      border: '2px solid #7fffd4',
       borderRadius: '8px',
       textTransform: 'uppercase',
-      cursor: 'pointer'
+      cursor: 'pointer',
+      transition: '.3s ease',
     };
 
     let persons = null;
 
     if( this.state.showPersons ) {
-      persons = 
-      <div>
-        <Person 
-        name={this.state.persons[0].name} 
-        percent={this.state.persons[0].percent}>
-        {this.state.persons[0].children}
-        </Person>
-        <Person 
-        name={this.state.persons[1].name} 
-        percent={this.state.persons[1].percent}
-        click={this.switchNameHandler.bind(this, 'Sherlock')}
-        change={this.nameChangedHandler.bind( this )} />
-        <Person 
-        name={this.state.persons[2].name} 
-        percent={this.state.persons[2].percent}>
-        {this.state.persons[2].children}
-        </Person>
-      </div>
+      persons = (
+        <div>
+          {this.state.persons.map( (person, index) => {
+            return <Person 
+            key={person.id}
+            name={person.name} 
+            percent={person.percent} 
+            children={person.children}
+            click={() => this.deletePersonHandler(index)}
+            changed={(event) => {this.nameChangedHandler(event, person.id)}} />
+          })}
+        </div>
+      );
+
+      style.backgroundColor = '#030388';
+      style.color = '#fff';
     };
+
+    let classes = [];
+    if (this.state.persons.length <= 2) {
+      classes.push('blue');
+    }
+    if(this.state.persons.length <= 1) {
+      classes.push('italic');
+    }
     
     return (
       <div className="App">
         <h1>I'm a React App</h1>
-        <p>Sure thing</p>
+        <p className={classes.join(' ')}>Sure thing</p>
         <button 
         style={style}
         onClick={this.togglePersonsHandler}>Show up</button>       
