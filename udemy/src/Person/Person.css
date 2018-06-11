@@ -7,3 +7,9 @@
   border-radius: 10px;
   box-shadow: 4px 3px 3px #aaa;
 }
+
+@media (max-width: 767px) {
+  .Person {
+    width: 80%;
+  }
+}

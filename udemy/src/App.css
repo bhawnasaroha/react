@@ -1,9 +1,19 @@
 .App {
   text-align: center;
 }
-.blue{
+.blue {
   color:blue;
 }
-.italic{
+.italic {
   font-style: italic;
+}
+
+.Button {
+  background-color: #40d6a3;
+  color: #000;
+  padding: 12px;
+  border-radius: 8px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: .3s ease;
 }
